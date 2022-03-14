@@ -1,23 +1,32 @@
 package main
 
 import (
-    	"fmt"
-    	"os"
-	"strings"
 	"bufio"
+	"fmt"
+	"os"
 	"strconv"
+	"strings"
 )
 
 func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+	if e != nil {
+		panic(e)
+	}
 }
 
+func processCommand(pos *map[string]int, cmd string, amount int) {
+	if cmd == "forward" {
+		(*pos)["forward"] += amount
+	} else if cmd == "down" {
+		(*pos)["depth"] += amount
+	} else if cmd == "up" {
+		(*pos)["depth"] -= amount
+	}
+}
 
 func main() {
 	position := make(map[string]int)
-	position["direction"] = 0
+	position["forward"] = 0
 	position["depth"] = 0
 
 	file, err := os.Open("input.txt")
@@ -31,8 +40,8 @@ func main() {
 		command := fields[0]
 		amount, err := strconv.Atoi(fields[1])
 		check(err)
-
-		fmt.Print(command)
-		fmt.Print(" ", amount, "\n")
+		processCommand(&position, command, amount)
 	}
+	r := position["forward"] * position["depth"]
+	fmt.Println("Result is", r)
 }
