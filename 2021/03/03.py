@@ -4,7 +4,6 @@ def msb_string(lines):
     """
     result = ""
     for column in zip(*lines)[:-1]:
-        print("Line:", column)
         zeros = ones = 0
         for bit in column:
             if bit == "0":
