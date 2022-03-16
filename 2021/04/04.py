@@ -1,14 +1,18 @@
-import copy
-
 class Bingo:
     def __init__(self, board):
-        self.board = copy.deepcopy(board)
+        self.board = []
+        for row in board:
+            self.board.append(list(row))
 
     def strike_out(self, number):
-        for x, row in enumerate(self.board):
-            for y, board_number in enumerate(row):
-                if board_number == number:
-                    self.board[x][y] *= -1
+        for row in self.board:
+            try:
+                idx = row.index(number)
+                row[idx] += 100
+            except ValueError:
+                pass
+
+        self.sanity(number)
 
     def __str__(self):
         board = ""
@@ -21,17 +25,27 @@ class Bingo:
     def has_bingo(self):
         bingo = False
         for row in self.board:
-            bingo |= all(number < 0 for number in row)
+            bingo |= all(number >= 100 for number in row)
             if bingo:
                 return True
         for column in zip(*self.board):
-            bingo |= all(number < 0 for number in column)
+            bingo |= all(number >= 100 for number in column)
             if bingo:
                 return True
         return bingo
 
     def board_sum(self):
-        return sum(number for row in self.board for number in row if number > 0)
+        return sum(number for row in self.board for number in row if number < 100)
+
+    def sanity(self, strike_out):
+        for row in self.board:
+            for number in row:
+                try:
+                    assert number != strike_out
+                except AssertionError:
+                    print(number, strike_out)
+                    print(self)
+
 
 
     __repr__ = __str__
@@ -46,7 +60,7 @@ def create_bingo(f):
     return Bingo(board)
 
 bingos = []
-with open('si.txt') as f:
+with open('input.txt') as f:
     numbers = next(f)
     try:
         while True:
@@ -66,5 +80,6 @@ with open('si.txt') as f:
                 print("Board sum:", b.board_sum())
                 print("Curr number:", number)
                 print("Result:", b.board_sum() * int(number))
+                exit()
 
 
