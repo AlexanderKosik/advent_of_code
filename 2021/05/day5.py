@@ -58,10 +58,10 @@ def get_points_from_line(line):
     x_2, y_2 = map(int, second.split(","))
     return (x_1, y_1), (x_2, y_2)
 
-with open("small.txt") as f:
-    b = Board(10, 10)
-    for line in f:
-        p_1, p_2 = get_points_from_line(line)
+with open("input.txt") as f:
+    b = Board(1000, 1000)
+    for l in f:
+        p_1, p_2 = get_points_from_line(l)
         b += (p_1, p_2)
 
     print(b.dangerous())
